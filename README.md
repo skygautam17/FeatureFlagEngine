@@ -32,15 +32,19 @@ GET /api/evaluate?featureKey=...&userId=...&groupId=...
 
 ### Backend
 1. Open solution in Visual Studio 2022
-2. Configure connection string in appsettings.json
+2. Configure connection string in appsettings.json or don't change if you are using in memory
 3. Run:
    dotnet ef database update
 4. Run the API
 
 ### Angular
-cd ui/feature-flag-ui
+cd D:\FeatureFlagEngine\src\FeatureFlagEngine.Web\ClientApp
 npm install
 npm start
+1. Open solution in Visual Studio 2022
+2. Run the Web Application Project
+
+<img width="1891" height="814" alt="image" src="https://github.com/user-attachments/assets/ddd7a2ea-0c1e-46ca-a311-eb21cefd4c8a" />
 
 ## Database Schema
 
@@ -67,9 +71,6 @@ FeatureOverrides:
 - Region targeting
 - Redis caching
 - Audit log viewer
-
-## For running Project
-- Just Run API and Web Application project together. It will load angular application as well but before that, Please run npm install command to path D:\FeatureFlagEngine\src\FeatureFlagEngine.Web\ClientApp. path might be changed for you
 - Docker setup
 
 ## Testing
