@@ -8,4 +8,11 @@ public class AppDbContext : DbContext
     public DbSet<FeatureFlag> FeatureFlags => Set<FeatureFlag>();
     public DbSet<FeatureOverride> FeatureOverrides => Set<FeatureOverride>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public void ApplyMigrations()
+    {
+        if (Database.IsRelational())   // Runs only for SQL Server, not InMemory
+        {
+            Database.Migrate();
+        }
+    }
 }
