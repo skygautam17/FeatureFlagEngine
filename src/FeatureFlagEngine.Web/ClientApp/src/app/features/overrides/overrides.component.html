@@ -1,40 +1,103 @@
-<h2>Overrides</h2>
+<div class="container mt-4">
 
-<div style="margin-bottom:20px">
+  <h2 class="mb-3">Overrides</h2>
 
-    <input [(ngModel)]="model.featureFlagId" placeholder="FeatureFlagId" />
+  <!-- Create Override Form -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
 
-    <input [(ngModel)]="model.userId" placeholder="UserId" />
+      <div class="row g-2 align-items-center">
 
-    <input [(ngModel)]="model.groupId" placeholder="GroupId" />
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            [(ngModel)]="model.featureFlagId"
+            placeholder="Feature Flag Id"
+          />
+        </div>
 
-    <label>
-        Enabled
-        <input type="checkbox" [(ngModel)]="model.enabled" />
-    </label>
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            [(ngModel)]="model.userId"
+            placeholder="User Id"
+          />
+        </div>
 
-    <button (click)="create()" [disabled]="loading">
-        {{ loading ? 'Saving...' : 'Add' }}
-    </button>
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            [(ngModel)]="model.groupId"
+            placeholder="Group Id"
+          />
+        </div>
+
+        <div class="col-md-1 form-check mt-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="model.enabled"
+            id="enabledCheck"
+          />
+          <label class="form-check-label" for="enabledCheck">
+            Enabled
+          </label>
+        </div>
+
+        <div class="col-md-2">
+          <button
+            class="btn btn-primary w-100"
+            (click)="create()"
+            [disabled]="loading">
+            {{ loading ? 'Saving...' : 'Add' }}
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Overrides Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>FeatureFlagId</th>
+            <th>UserId</th>
+            <th>GroupId</th>
+            <th>Enabled</th>
+            <th style="width:120px;">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let o of overrides">
+            <td>{{o.featureFlagId}}</td>
+            <td>{{o.userId}}</td>
+            <td>{{o.groupId}}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="o.enabled ? 'bg-success' : 'bg-secondary'">
+                {{ o.enabled ? 'Enabled' : 'Disabled' }}
+              </span>
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="delete(o.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
 
 </div>
-
-<table border="1" cellpadding="6">
-    <tr>
-        <th>FeatureFlagId</th>
-        <th>UserId</th>
-        <th>GroupId</th>
-        <th>Enabled</th>
-        <th>Action</th>
-    </tr>
-
-    <tr *ngFor="let o of overrides">
-        <td>{{o.featureFlagId}}</td>
-        <td>{{o.userId}}</td>
-        <td>{{o.groupId}}</td>
-        <td>{{o.enabled}}</td>
-        <td>
-            <button (click)="delete(o.id)">Delete</button>
-        </td>
-    </tr>
-</table>

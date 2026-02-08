@@ -30,4 +30,20 @@ export class FeaturesComponent implements OnInit {
   delete(id:string){
     this.api.deleteFeature(id).subscribe(()=>this.load());
   }
+
+  edit(feature: any) {
+  feature.isEditing = true;
+}
+
+cancelEdit(feature: any) {
+  feature.isEditing = false;
+  this.load();   // reload original values
+}
+
+update(feature: any) {
+  this.api.updateFeature(feature).subscribe(() => {
+    feature.isEditing = false;
+    this.load();
+  });
+}
 }

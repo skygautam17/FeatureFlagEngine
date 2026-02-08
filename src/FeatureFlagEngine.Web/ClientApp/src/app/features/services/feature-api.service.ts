@@ -16,6 +16,11 @@ export class FeatureApiService {
     getFeatures() { return this.http.get(`${this.baseUrl}/features`); }
     createFeature(data: any) { return this.http.post(`${this.baseUrl}/features`, data); }
     deleteFeature(id: string) { return this.http.delete(`${this.baseUrl}/features/${id}`); }
+    updateFeature(feature: any) {
+    return this.http.put(
+        `${this.baseUrl}/features/${feature.id}`,
+        feature
+    );}
 
     evaluate(
         featureKey: string,

@@ -1,43 +1,64 @@
-<h2>Evaluate Feature</h2>
+<div class="container mt-4">
 
-<div style="max-width:400px">
+  <h2 class="mb-3">Evaluate Feature</h2>
 
-    <div>
-        <label>Feature Key</label><br />
-        <input type="text"
-               [(ngModel)]="featureKey"
-               placeholder="Feature Key" />
-    </div>
+  <div class="card shadow-sm" style="max-width:500px;">
+    <div class="card-body">
 
-    <div>
-        <label>User Id (optional)</label><br />
-        <input type="text"
-               [(ngModel)]="userId"
-               placeholder="User Id" />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Feature Key</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="featureKey"
+          placeholder="Feature Key" />
+      </div>
 
-    <div>
-        <label>Group Id (optional)</label><br />
-        <input type="text"
-               [(ngModel)]="groupId"
-               placeholder="Group Id" />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">User Id (optional)</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="userId"
+          placeholder="User Id" />
+      </div>
 
-    <div>
-        <label>Region (optional)</label><br />
-        <input type="text"
-               [(ngModel)]="region"
-               placeholder="Region" />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Group Id (optional)</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="groupId"
+          placeholder="Group Id" />
+      </div>
 
-    <br />
+      <div class="mb-3">
+        <label class="form-label">Region (optional)</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="region"
+          placeholder="Region" />
+      </div>
 
-    <button (click)="run()" [disabled]="!featureKey || loading">
+      <button
+        class="btn btn-primary w-100"
+        (click)="run()"
+        [disabled]="!featureKey || loading">
         {{ loading ? 'Evaluating...' : 'Evaluate' }}
-    </button>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="card mt-4 shadow-sm" *ngIf="result">
+    <div class="card-header">
+      Result
+    </div>
+    <div class="card-body">
+      <pre class="mb-0">{{ result | json }}</pre>
+    </div>
+  </div>
 
 </div>
-
-<hr />
-
-<pre *ngIf="result">{{ result | json }}</pre>
