@@ -1,17 +1,30 @@
-
 using Xunit;
-using FeatureFlagEngine.Domain.Entities;
+using Moq;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class EvaluationControllerTests
 {
-    [Fact]
-    public async Task Should_Return_NotFound_When_Feature_Not_Exists()
+    private readonly Mock<IMediator> _mediatorMock;
+    private readonly EvaluationController _controller;
+
+    public EvaluationControllerTests()
     {
-        var db = TestDbContextFactory.Create();
-        var controller = new EvaluationController(db);
+        _mediatorMock = new Mock<IMediator>();
+        _controller = new EvaluationController(_mediatorMock.Object);
+    }
 
-        var result = await controller.Evaluate("MissingFeature", null, null, null);
+    [Fact]
+    public async Task Evaluate_ShouldReturnOk()
+    {
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<EvaluateFeatureQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-        Assert.NotNull(result);
+        var result = await _controller.Evaluate("Feature1", "user1", "group1", "IN");
+
+        Assert.IsType<OkObjectResult>(result);
     }
 }

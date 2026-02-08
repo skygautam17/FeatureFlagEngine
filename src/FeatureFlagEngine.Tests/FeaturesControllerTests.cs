@@ -1,25 +1,97 @@
-
 using Xunit;
+using Moq;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using FeatureFlagEngine.Domain.Entities;
 
 public class FeaturesControllerTests
 {
-    [Fact]
-    public async Task Should_Create_Feature()
+    private readonly Mock<IMediator> _mediatorMock;
+    private readonly FeaturesController _controller;
+
+    public FeaturesControllerTests()
     {
-        var db = TestDbContextFactory.Create();
-        var controller = new FeaturesController(db);
+        _mediatorMock = new Mock<IMediator>();
+        _controller = new FeaturesController(_mediatorMock.Object);
+    }
 
-        var feature = new FeatureFlag
-        {
-            Key = "TestFeature",
-            Description = "Test",
-            Enabled = true
-        };
+    [Fact]
+    public async Task GetAll_ShouldReturnOk()
+    {
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetAllFeaturesQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<FeatureFlag>());
 
-        var result = await controller.Create(feature);
+        var result = await _controller.GetAll();
 
-        Assert.NotNull(result);
-        Assert.Equal(1, db.FeatureFlags.Count());
+        Assert.IsType<OkObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnOk()
+    {
+        var command = new CreateFeatureCommand(Guid.NewGuid().ToString(), "Test", true);
+
+        _mediatorMock
+            .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FeatureFlag());
+
+        var result = await _controller.Create(command);
+
+        Assert.IsType<OkObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnBadRequest_WhenIdMismatch()
+    {
+        var cmd = new UpdateFeatureCommand(
+            Guid.NewGuid(),
+            "FeatureA",
+            "Test feature",
+            true
+        );
+
+        var result = await _controller.Update(Guid.NewGuid(), cmd);
+
+        Assert.IsType<BadRequestResult>(result);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnOk_WhenValid()
+    {
+        Guid id = Guid.NewGuid();
+        var cmd = new UpdateFeatureCommand(
+            id,
+            "FeatureA",
+            "Test feature",
+            true
+        );
+
+        _mediatorMock
+            .Setup(m => m.Send(cmd, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var result = await _controller.Update(id, cmd);
+
+        Assert.IsType<OkObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnOk()
+    {
+        var id = Guid.NewGuid();
+
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<DeleteFeatureCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var result = await _controller.Delete(id);
+
+        Assert.IsType<OkObjectResult>(result);
     }
 }
