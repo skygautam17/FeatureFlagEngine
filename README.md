@@ -67,6 +67,9 @@ FeatureOverrides:
 - Region targeting
 - Redis caching
 - Audit log viewer
+
+## For running Project
+- Just Run API and Web Application project together. It will load angular application as well but before that, Please run npm install command to path D:\FeatureFlagEngine\src\FeatureFlagEngine.Web\ClientApp. path might be changed for you
 - Docker setup
 
 ## Testing
