@@ -1,9 +1,15 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Injectable } from '@angular/core';
+import {
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-export const apiInterceptor: HttpInterceptorFn = (req, next) => {
-  const apiReq = req.clone({
-    url: req.url.startsWith('http') ? req.url : `${environment.apiBaseUrl}/${req.url}`
-  });
-  return next(apiReq);
-};
+@Injectable()
+export class ApiInterceptor implements HttpInterceptor {
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(req);
+    }
+}
