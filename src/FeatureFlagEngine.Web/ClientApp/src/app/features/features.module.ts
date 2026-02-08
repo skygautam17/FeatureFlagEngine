@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'overrides', component: OverridesComponent },
   { path: 'evaluates', component: EvaluateComponent },
   { path: 'audithistory', component: AuditHistoryComponent },
-  { path: 'features', component: FeaturesComponent }
+  { path: '', component: FeaturesComponent }
 ];
 
 @NgModule({

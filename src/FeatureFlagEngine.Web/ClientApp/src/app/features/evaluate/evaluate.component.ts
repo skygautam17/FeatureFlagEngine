@@ -2,25 +2,42 @@ import { Component } from '@angular/core';
 import { FeatureApiService } from '../../features/services/feature-api.service';
 
 @Component({
-  selector: 'app-evaluate',
-  templateUrl: './evaluate.component.html'
+    selector: 'app-evaluate',
+    templateUrl: './evaluate.component.html'
 })
 export class EvaluateComponent {
 
-  featureKey: string = '';
-  result: any = null;
+    featureKey: string = '';
+    userId: string = '';
+    groupId: string = '';
+    region: string = '';
 
-  constructor(private api: FeatureApiService) {}
+    result: any = null;
+    loading = false;
 
-  run(): void {
-    if (!this.featureKey) return;
+    constructor(private api: FeatureApiService) { }
 
-    this.api.evaluate(this.featureKey).subscribe({
-      next: (res) => this.result = res,
-      error: (err) => {
-        console.error(err);
-        this.result = { error: 'Failed to evaluate feature' };
-      }
-    });
-  }
+    run(): void {
+        if (!this.featureKey) return;
+
+        this.loading = true;
+        this.result = null;
+
+        this.api.evaluate(
+            this.featureKey,
+            this.userId || undefined,
+            this.groupId || undefined,
+            this.region || undefined
+        ).subscribe({
+            next: (res) => {
+                this.result = res;
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error(err);
+                this.result = { error: 'Failed to evaluate feature' };
+                this.loading = false;
+            }
+        });
+    }
 }

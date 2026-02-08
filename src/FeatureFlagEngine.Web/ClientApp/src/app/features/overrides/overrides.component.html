@@ -1,18 +1,40 @@
-
 <h2>Overrides</h2>
 
-<div>
-  <input [(ngModel)]="model.featureFlagId" placeholder="FeatureFlagId"/>
-  <input [(ngModel)]="model.userId" placeholder="UserId"/>
-  <input [(ngModel)]="model.groupId" placeholder="GroupId"/>
-  <label>
-    Enabled <input type="checkbox" [(ngModel)]="model.enabled"/>
-  </label>
-  <button (click)="create()">Add</button>
+<div style="margin-bottom:20px">
+
+    <input [(ngModel)]="model.featureFlagId" placeholder="FeatureFlagId" />
+
+    <input [(ngModel)]="model.userId" placeholder="UserId" />
+
+    <input [(ngModel)]="model.groupId" placeholder="GroupId" />
+
+    <label>
+        Enabled
+        <input type="checkbox" [(ngModel)]="model.enabled" />
+    </label>
+
+    <button (click)="create()" [disabled]="loading">
+        {{ loading ? 'Saving...' : 'Add' }}
+    </button>
+
 </div>
 
-<ul>
-<li *ngFor="let o of overrides">
-  {{o.featureFlagId}} | {{o.userId}} | {{o.groupId}} | {{o.enabled}}
-</li>
-</ul>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>FeatureFlagId</th>
+        <th>UserId</th>
+        <th>GroupId</th>
+        <th>Enabled</th>
+        <th>Action</th>
+    </tr>
+
+    <tr *ngFor="let o of overrides">
+        <td>{{o.featureFlagId}}</td>
+        <td>{{o.userId}}</td>
+        <td>{{o.groupId}}</td>
+        <td>{{o.enabled}}</td>
+        <td>
+            <button (click)="delete(o.id)">Delete</button>
+        </td>
+    </tr>
+</table>

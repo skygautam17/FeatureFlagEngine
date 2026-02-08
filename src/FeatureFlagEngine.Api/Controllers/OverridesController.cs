@@ -1,51 +1,53 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FeatureFlagEngine.Domain.Entities;
-using System.Threading.Tasks;
+using MediatR;
 using System;
+using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/overrides")]
 public class OverridesController : ControllerBase
 {
-    private readonly AppDbContext _db;
-    public OverridesController(AppDbContext db) => _db = db;
+    private readonly IMediator _mediator;
+
+    public OverridesController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await _db.FeatureOverrides.ToListAsync());
+    {
+        var result = await _mediator.Send(new GetAllOverridesQuery());
+        return Ok(result);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Create(FeatureOverride model)
+    public async Task<IActionResult> Create(CreateOverrideCommand command)
     {
-        _db.FeatureOverrides.Add(model);
-        await _db.SaveChangesAsync();
-        return Ok(model);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, FeatureOverride model)
+    public async Task<IActionResult> Update(Guid id, UpdateOverrideCommand command)
     {
-        var item = await _db.FeatureOverrides.FindAsync(id);
-        if (item == null) return NotFound();
+        command.Id = id;
+        var result = await _mediator.Send(command);
 
-        item.UserId = model.UserId;
-        item.GroupId = model.GroupId;
-        item.Enabled = model.Enabled;
+        if (result == null)
+            return NotFound();
 
-        await _db.SaveChangesAsync();
-        return Ok(item);
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var item = await _db.FeatureOverrides.FindAsync(id);
-        if (item == null) return NotFound();
+        var result = await _mediator.Send(new DeleteOverrideCommand { Id = id });
 
-        _db.FeatureOverrides.Remove(item);
-        await _db.SaveChangesAsync();
+        if (!result)
+            return NotFound();
+
         return Ok();
     }
 }

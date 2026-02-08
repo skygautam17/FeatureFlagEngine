@@ -17,14 +17,36 @@ export class FeatureApiService {
     createFeature(data: any) { return this.http.post(`${this.baseUrl}/features`, data); }
     deleteFeature(id: string) { return this.http.delete(`${this.baseUrl}/features/${id}`); }
 
-    getOverrides() { return this.http.get(`${this.baseUrl}/overrides`); }
-    createOverride(data: any) { return this.http.post(`${this.baseUrl}/overrides`, data); }
+    evaluate(
+        featureKey: string,
+        userId?: string,
+        groupId?: string,
+        region?: string
+    ): Observable<any> {
 
-    evaluate(featureKey: string, userId?: string, groupId?: string, region?: string) {
-        let params = new HttpParams().set('featureKey', featureKey);
+        let params = new HttpParams()
+            .set('featureKey', featureKey);
+
         if (userId) params = params.set('userId', userId);
         if (groupId) params = params.set('groupId', groupId);
         if (region) params = params.set('region', region);
+
         return this.http.get(`${this.baseUrl}/evaluate`, { params });
+    }
+
+    getOverrides(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.baseUrl}/overrides`);
+    }
+
+    createOverride(model: any): Observable<any> {
+        return this.http.post(`${this.baseUrl}/overrides`, model);
+    }
+
+    deleteOverride(id: string): Observable<any> {
+        return this.http.delete(`${this.baseUrl}/overrides/${id}`);
+    }
+
+    getLogs(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.baseUrl}/audit`);
     }
 }

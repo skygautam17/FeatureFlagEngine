@@ -1,13 +1,43 @@
 <h2>Evaluate Feature</h2>
 
-<input 
-  type="text"
-  [(ngModel)]="featureKey" 
-  placeholder="Feature Key"
-/>
+<div style="max-width:400px">
 
-<button (click)="run()" [disabled]="!featureKey">
-  Evaluate
-</button>
+    <div>
+        <label>Feature Key</label><br />
+        <input type="text"
+               [(ngModel)]="featureKey"
+               placeholder="Feature Key" />
+    </div>
+
+    <div>
+        <label>User Id (optional)</label><br />
+        <input type="text"
+               [(ngModel)]="userId"
+               placeholder="User Id" />
+    </div>
+
+    <div>
+        <label>Group Id (optional)</label><br />
+        <input type="text"
+               [(ngModel)]="groupId"
+               placeholder="Group Id" />
+    </div>
+
+    <div>
+        <label>Region (optional)</label><br />
+        <input type="text"
+               [(ngModel)]="region"
+               placeholder="Region" />
+    </div>
+
+    <br />
+
+    <button (click)="run()" [disabled]="!featureKey || loading">
+        {{ loading ? 'Evaluating...' : 'Evaluate' }}
+    </button>
+
+</div>
+
+<hr />
 
 <pre *ngIf="result">{{ result | json }}</pre>

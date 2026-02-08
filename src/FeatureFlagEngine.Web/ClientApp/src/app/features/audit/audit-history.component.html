@@ -1,0 +1,21 @@
+<h2>Audit Logs</h2>
+
+<div *ngIf="loading">Loading...</div>
+
+<table border="1" cellpadding="6" *ngIf="logs.length">
+  <tr>
+    <th>Action</th>
+    <th>Entity</th>
+    <th>Created At</th>
+  </tr>
+
+  <tr *ngFor="let log of logs">
+    <td>{{log.action}}</td>
+    <td>{{log.entityName}}</td>
+    <td>{{log.createdAt | date:'short'}}</td>
+  </tr>
+</table>
+
+<div *ngIf="!loading && logs.length === 0">
+  No audit logs found.
+</div>
