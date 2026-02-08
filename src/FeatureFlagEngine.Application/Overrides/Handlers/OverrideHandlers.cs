@@ -1,19 +1,23 @@
 using MediatR;
 using FeatureFlagEngine.Domain.Entities;
+using FeatureFlagEngine.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
-
-public static class OverrideStore
-{
-    public static List<FeatureOverride> Overrides = new();
-}
 
 public class CreateOverrideHandler
     : IRequestHandler<CreateOverrideCommand, FeatureOverride>
 {
-    public Task<FeatureOverride> Handle(
+    private readonly IAppDbContext _context;
+
+    public CreateOverrideHandler(IAppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<FeatureOverride> Handle(
         CreateOverrideCommand request,
         CancellationToken cancellationToken)
     {
@@ -25,36 +29,56 @@ public class CreateOverrideHandler
             Enabled = request.Enabled
         };
 
-        OverrideStore.Overrides.Add(model);
-        return Task.FromResult(model);
+        _context.FeatureOverrides.Add(model);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return model;
     }
 }
 
 public class GetAllOverridesHandler
     : IRequestHandler<GetAllOverridesQuery, List<FeatureOverride>>
 {
-    public Task<List<FeatureOverride>> Handle(
+    private readonly IAppDbContext _context;
+
+    public GetAllOverridesHandler(IAppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<List<FeatureOverride>> Handle(
         GetAllOverridesQuery request,
         CancellationToken cancellationToken)
     {
-        return Task.FromResult(OverrideStore.Overrides.ToList());
+        return await _context.FeatureOverrides
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 }
 
 public class DeleteOverrideHandler
     : IRequestHandler<DeleteOverrideCommand, bool>
 {
-    public Task<bool> Handle(
+    private readonly IAppDbContext _context;
+
+    public DeleteOverrideHandler(IAppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<bool> Handle(
         DeleteOverrideCommand request,
         CancellationToken cancellationToken)
     {
-        var item = OverrideStore.Overrides
-            .FirstOrDefault(x => x.Id == request.Id);
+        var item = await _context.FeatureOverrides
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (item == null)
-            return Task.FromResult(false);
+            return false;
 
-        OverrideStore.Overrides.Remove(item);
-        return Task.FromResult(true);
+        _context.FeatureOverrides.Remove(item);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }

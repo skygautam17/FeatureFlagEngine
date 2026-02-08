@@ -1,24 +1,30 @@
 ﻿using FeatureFlagEngine.Domain.Entities;
+using FeatureFlagEngine.Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace FeatureFlagEngine.Application.Audit
 {
-    public static class AuditStore
-    {
-        public static List<AuditLog> Logs = new();
-    }
     public class GetAuditLogsHandler
         : IRequestHandler<GetAuditLogsQuery, List<AuditLog>>
     {
-        public Task<List<AuditLog>> Handle(
+        private readonly IAppDbContext _context;
+
+        public GetAuditLogsHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<AuditLog>> Handle(
             GetAuditLogsQuery request,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(AuditStore.Logs.ToList());
+            return await _context.AuditLogs
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
     }
 }

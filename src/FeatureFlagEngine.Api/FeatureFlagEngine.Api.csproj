@@ -21,7 +21,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FeatureFlagEngine.Application\FeatureFlagEngine.Application.csproj" />
     <ProjectReference Include="..\FeatureFlagEngine.Infrastructure\FeatureFlagEngine.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

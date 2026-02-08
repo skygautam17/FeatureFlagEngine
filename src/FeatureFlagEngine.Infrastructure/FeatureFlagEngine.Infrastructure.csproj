@@ -21,6 +21,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FeatureFlagEngine.Application\FeatureFlagEngine.Application.csproj" />
     <ProjectReference Include="..\FeatureFlagEngine.Domain\FeatureFlagEngine.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>

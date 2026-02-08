@@ -5,6 +5,7 @@ using StackExchange.Redis;
 using MediatR;
 using System.Reflection;
 using Serilog;
+using FeatureFlagEngine.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +21,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
-
+builder.Services.AddScoped<AuditInterceptor>();
 bool useInMemory = builder.Configuration.GetValue<bool>("Database:UseInMemory");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 {
+
+    var interceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
+
     if (useInMemory)
+    {
         options.UseInMemoryDatabase("FeatureFlags");
+    }
     else
     {
         var connString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -34,7 +40,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
         options.UseSqlServer(connString);
     }
+
+    // Apply interceptor for BOTH providers
+    options.AddInterceptors(interceptor);
 });
+
+builder.Services.AddScoped<IAppDbContext>(provider =>
+    provider.GetRequiredService<AppDbContext>());
+
 
 bool isRedisEnabled = builder.Configuration.GetValue<bool>("Redis:IsEnabled");
 
