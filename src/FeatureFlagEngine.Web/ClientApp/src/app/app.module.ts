@@ -11,25 +11,29 @@ import { MatSortModule } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { FeatureListComponent } from './features/feature-list.component';
-import { FeatureMaterialTableComponent } from './features/feature-material-table.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuditHistoryComponent } from './audit/audit-history.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { AuditHistoryComponent } from './features/audit/audit-history.component';
 
 import { routes } from './app.routes';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
+import { EvaluateComponent } from './features/evaluate/evaluate.component';
+import { OverridesComponent } from './features/overrides/overrides.component';
+import { FeaturesComponent } from './features/features/features.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
         AppComponent,
-        FeatureListComponent,
-        FeatureMaterialTableComponent,
         DashboardComponent,
-        AuditHistoryComponent
+        AuditHistoryComponent,
+        EvaluateComponent,
+        OverridesComponent,
+        FeaturesComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
+        CommonModule,
         FormsModule,
         BrowserAnimationsModule,
         MatTableModule,

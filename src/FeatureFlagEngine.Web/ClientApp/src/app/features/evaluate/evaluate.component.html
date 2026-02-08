@@ -1,0 +1,13 @@
+<h2>Evaluate Feature</h2>
+
+<input 
+  type="text"
+  [(ngModel)]="featureKey" 
+  placeholder="Feature Key"
+/>
+
+<button (click)="run()" [disabled]="!featureKey">
+  Evaluate
+</button>
+
+<pre *ngIf="result">{{ result | json }}</pre>

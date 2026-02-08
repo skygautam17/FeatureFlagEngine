@@ -9,9 +9,9 @@ import { RouterOutlet, RouterLink } from '@angular/router';
     <header>
       <h2>Feature Flag Admin</h2>
       <nav>
-        <a routerLink="/">Dashboard</a>
-        <a routerLink="/features">Features</a>
-        <a routerLink="/audit">Audit</a>
+        <a routerLink="/features/dashboard">Dashboard</a>
+        <a routerLink="/features/overrides">Overrides</a>
+        <a routerLink="/features/audithistory">Audit</a>
       </nav>
       <hr />
     </header>

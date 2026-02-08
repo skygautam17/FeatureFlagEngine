@@ -1,0 +1,19 @@
+
+<h2>Features</h2>
+
+<div>
+  <input [(ngModel)]="newFeature.key" placeholder="Feature Key"/>
+  <label>
+    Enabled <input type="checkbox" [(ngModel)]="newFeature.enabled"/>
+  </label>
+  <button (click)="create()">Add</button>
+</div>
+
+<table border="1" cellpadding="6">
+<tr><th>Key</th><th>Enabled</th><th>Actions</th></tr>
+<tr *ngFor="let f of features">
+<td>{{f.key}}</td>
+<td>{{f.enabled}}</td>
+<td><button (click)="delete(f.id)">Delete</button></td>
+</tr>
+</table>

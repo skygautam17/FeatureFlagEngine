@@ -1,0 +1,18 @@
+
+<h2>Overrides</h2>
+
+<div>
+  <input [(ngModel)]="model.featureFlagId" placeholder="FeatureFlagId"/>
+  <input [(ngModel)]="model.userId" placeholder="UserId"/>
+  <input [(ngModel)]="model.groupId" placeholder="GroupId"/>
+  <label>
+    Enabled <input type="checkbox" [(ngModel)]="model.enabled"/>
+  </label>
+  <button (click)="create()">Add</button>
+</div>
+
+<ul>
+<li *ngFor="let o of overrides">
+  {{o.featureFlagId}} | {{o.userId}} | {{o.groupId}} | {{o.enabled}}
+</li>
+</ul>
