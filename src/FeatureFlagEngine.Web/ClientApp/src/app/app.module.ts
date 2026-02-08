@@ -7,40 +7,34 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
-import { RouterModule } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AuditHistoryComponent } from './features/audit/audit-history.component';
 
-import { routes } from './app.routes';
+import { AppRoutingModule } from './app.routes';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { EvaluateComponent } from './features/evaluate/evaluate.component';
 import { OverridesComponent } from './features/overrides/overrides.component';
 import { FeaturesComponent } from './features/features/features.component';
 import { CommonModule } from '@angular/common';
+import { LayoutComponent } from "./core/layout/layout.component";
 
 @NgModule({
     declarations: [
         AppComponent,
-        DashboardComponent,
-        AuditHistoryComponent,
-        EvaluateComponent,
-        OverridesComponent,
-        FeaturesComponent
+        LayoutComponent,
     ],
     imports: [
-        BrowserModule,
-        HttpClientModule,
-        CommonModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        RouterModule.forRoot(routes)
-    ],
+    BrowserModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    AppRoutingModule,
+],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,

@@ -23,14 +23,42 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
-          }
+            "scripts": [],
+            "sourceMap": true
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "vendorChunk": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "clientapp:build"
-          }
+            "buildTarget": "clientapp:build:development",
+            "liveReload": true,
+            "poll": 2000
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "clientapp:build:production"
+            },
+            "development": {
+              "buildTarget": "clientapp:build:development",
+              "liveReload": true,
+              "poll": 2000
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }

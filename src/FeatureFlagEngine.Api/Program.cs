@@ -15,6 +15,17 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Feat
 string redisConn = builder.Configuration["Redis:ConnectionString"];
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConn));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("*")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 app.UseSwagger();

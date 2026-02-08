@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   selector:'app-root',
   template:`
     <h1>Feature Flag Admin</h1>
+    <router-outlet></router-outlet>
   `
 })
 export class AppComponent {}

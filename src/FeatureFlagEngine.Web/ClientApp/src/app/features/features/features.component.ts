@@ -11,7 +11,10 @@ export class FeaturesComponent implements OnInit {
 
     constructor(private api: FeatureApiService){}
 
-  ngOnInit(){ this.load(); }
+  ngOnInit(){
+    debugger;
+     this.load(); 
+    }
 
   load(){
     this.api.getFeatures().subscribe((res:any)=>this.features=res);
