@@ -6,136 +6,189 @@
   <div class="card mb-4 shadow-sm">
     <div class="card-body">
 
-      <div class="row g-2 align-items-center">
+      <form #featureForm="ngForm">
 
-        <div class="col-md-4">
-          <input
-            class="form-control"
-            [(ngModel)]="newFeature.key"
-            placeholder="Feature Key"
-          />
+        <div class="row g-2 align-items-start">
+
+          <!-- Feature Key -->
+          <div class="col-md-4">
+            <input
+              class="form-control"
+              name="key"
+              [(ngModel)]="newFeature.key"
+              #key="ngModel"
+              required
+              minlength="3"
+              placeholder="Feature Key"
+            />
+
+            <small class="text-danger" *ngIf="key.invalid && key.touched">
+              Feature Key is required (min 3 characters)
+            </small>
+          </div>
+
+          <!-- Feature Description -->
+          <div class="col-md-4">
+            <input
+              class="form-control"
+              name="description"
+              [(ngModel)]="newFeature.description"
+              #description="ngModel"
+              required
+              minlength="5"
+              placeholder="Feature Description"
+            />
+
+            <small class="text-danger" *ngIf="description.invalid && description.touched">
+              Description is required (min 5 characters)
+            </small>
+          </div>
+
+          <!-- Enabled -->
+          <div class="col-md-2 form-check mt-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [(ngModel)]="newFeature.enabled"
+              name="enabled"
+              id="enabledCheck"
+            />
+            <label class="form-check-label" for="enabledCheck">
+              Enabled
+            </label>
+          </div>
+
+          <!-- Add Button -->
+          <div class="col-md-2">
+            <button
+              class="btn btn-primary w-100"
+              type="button"
+              (click)="create(featureForm)"
+              [disabled]="featureForm.invalid">
+              Add
+            </button>
+          </div>
+
         </div>
 
-        <div class="col-md-4">
-          <input
-            class="form-control"
-            [(ngModel)]="newFeature.description"
-            placeholder="Feature Description"
-          />
-        </div>
-
-        <div class="col-md-2 form-check mt-2">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            [(ngModel)]="newFeature.enabled"
-            id="enabledCheck"
-          />
-          <label class="form-check-label" for="enabledCheck">
-            Enabled
-          </label>
-        </div>
-
-        <div class="col-md-2">
-          <button class="btn btn-primary w-100" (click)="create()">
-            Add
-          </button>
-        </div>
-
-      </div>
+      </form>
 
     </div>
   </div>
 
   <!-- Features Table -->
   <div class="card shadow-sm">
-    <div class="card-body p-0">
+  <div class="card-body p-0">
 
-      <table class="table table-striped table-hover mb-0">
-        <thead class="table-dark">
-          <tr>
-            <th>Key</th>
-            <th>Description</th>
-            <th>Enabled</th>
-            <th style="width:120px;">Actions</th>
-          </tr>
-        </thead>
+    <table class="table table-striped table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Key</th>
+          <th>Description</th>
+          <th>Enabled</th>
+          <th style="width:150px;">Actions</th>
+        </tr>
+      </thead>
 
-        <tbody>
-  <tr *ngFor="let f of features">
+      <tbody>
+        <tr *ngFor="let f of features">
 
-    <!-- Key -->
-    <td>
-      <input *ngIf="f.isEditing"
-             class="form-control"
-             [(ngModel)]="f.key" />
+          <td colspan="4" *ngIf="f.isEditing">
+            <!-- Edit Form -->
+            <form #editForm="ngForm" class="row g-2 align-items-center">
 
-      <span *ngIf="!f.isEditing">
-        {{f.key}}
-      </span>
-    </td>
+              <div class="col-md-3">
+                <input
+                  class="form-control"
+                  [(ngModel)]="f.key"
+                  name="editKey{{f.id}}"
+                  #editKey="ngModel"
+                  required
+                  minlength="3"
+                  placeholder="Feature Key"
+                />
+                <small class="text-danger" *ngIf="editKey.invalid && editKey.touched">
+                  Required (min 3 chars)
+                </small>
+              </div>
 
-    <!-- Description -->
-    <td>
-      <input *ngIf="f.isEditing"
-             class="form-control"
-             [(ngModel)]="f.description" />
+              <div class="col-md-4">
+                <input
+                  class="form-control"
+                  [(ngModel)]="f.description"
+                  name="editDesc{{f.id}}"
+                  #editDesc="ngModel"
+                  required
+                  minlength="5"
+                  placeholder="Description"
+                />
+                <small class="text-danger" *ngIf="editDesc.invalid && editDesc.touched">
+                  Required (min 5 chars)
+                </small>
+              </div>
 
-      <span *ngIf="!f.isEditing">
-        {{f.description}}
-      </span>
-    </td>
+              <div class="col-md-2">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="f.enabled"
+                  name="editEnabled{{f.id}}"
+                /> Enabled
+              </div>
 
-    <!-- Enabled -->
-    <td>
-      <div *ngIf="f.isEditing">
-        <input type="checkbox" [(ngModel)]="f.enabled" />
-      </div>
+              <div class="col-md-3 d-flex gap-2">
+                <button
+                  class="btn btn-sm btn-success"
+                  type="button"
+                  (click)="update(f, editForm)"
+                  [disabled]="editForm.invalid">
+                  Save
+                </button>
 
-      <span *ngIf="!f.isEditing"
-            class="badge"
-            [ngClass]="f.enabled ? 'bg-success' : 'bg-secondary'">
-        {{ f.enabled ? 'Enabled' : 'Disabled' }}
-      </span>
-    </td>
+                <button
+                  class="btn btn-sm btn-secondary"
+                  type="button"
+                  (click)="cancelEdit(f, editForm)">
+                  Cancel
+                </button>
+              </div>
 
-    <!-- Actions -->
-    <td>
-  <!-- Editing Mode -->
-  <div *ngIf="f.isEditing" class="d-flex gap-2">
-    <button class="btn btn-sm btn-success"
-            (click)="update(f)">
-      Save
-    </button>
+            </form>
+          </td>
 
-    <button class="btn btn-sm btn-secondary"
-            (click)="cancelEdit(f)">
-      Cancel
-    </button>
+          <!-- Normal View -->
+          <ng-container *ngIf="!f.isEditing">
+            <td>{{f.key}}</td>
+
+            <td>{{f.description}}</td>
+
+            <td>
+              <span class="badge"
+                    [ngClass]="f.enabled ? 'bg-success' : 'bg-secondary'">
+                {{ f.enabled ? 'Enabled' : 'Disabled' }}
+              </span>
+            </td>
+
+            <td class="d-flex gap-2">
+              <button class="btn btn-sm btn-warning"
+                      type="button"
+                      (click)="edit(f)">
+                Edit
+              </button>
+
+              <button class="btn btn-sm btn-danger"
+                      type="button"
+                      (click)="delete(f.id)">
+                Delete
+              </button>
+            </td>
+          </ng-container>
+
+        </tr>
+      </tbody>
+    </table>
+
   </div>
+</div>
 
-  <!-- Normal Mode -->
-  <div *ngIf="!f.isEditing" class="d-flex gap-2">
-    <button class="btn btn-sm btn-warning"
-            (click)="edit(f)">
-      Edit
-    </button>
-
-    <button class="btn btn-sm btn-danger"
-            (click)="delete(f.id)">
-      Delete
-    </button>
-  </div>
-</td>
-
-
-  </tr>
-</tbody>
-
-
-      </table>
-
-    </div>
-  </div>
 
 </div>
